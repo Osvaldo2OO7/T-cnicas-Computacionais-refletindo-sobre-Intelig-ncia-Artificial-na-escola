@@ -1,0 +1,405 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missão 2049 | AluraStart</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #102b24, #176b50);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            color: #222;
+            width: 100%;
+            max-width: 650px;
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 35px #0005;
+        }
+
+        .logo {
+            color: #168653;
+            font-size: 15px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #176b50;
+        }
+
+        p {
+            font-size: 17px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .destaque {
+            color: #168653;
+            font-weight: bold;
+        }
+
+        button {
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.04);
+        }
+
+        .principal {
+            background: #168653;
+            color: white;
+            width: 100%;
+        }
+
+        .alternativa {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            background: #edf5f0;
+            color: #174b36;
+            border: 2px solid #d4e7dc;
+            text-align: left;
+        }
+
+        .alternativa:hover {
+            background: #d8f1e2;
+        }
+
+        .alternativa:disabled {
+            cursor: default;
+            transform: none;
+            opacity: 0.85;
+        }
+
+        .escondido {
+            display: none;
+        }
+
+        #feedback {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .progresso {
+            height: 8px;
+            background: #e1e1e1;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        #barra {
+            width: 0%;
+            height: 100%;
+            background: #168653;
+            transition: width 0.3s;
+        }
+
+        .rodape {
+            margin-top: 25px;
+            color: #777;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+
+        <div class="logo">ALURASTART • MISSÃO 2049</div>
+
+        <section id="inicio">
+            <h1>O futuro está em suas mãos!</h1>
+
+            <p>
+                Estamos no ano de <span class="destaque">2049</span>.
+                O mundo enfrenta grandes desafios e precisamos de pessoas
+                capazes de tomar decisões inteligentes.
+            </p>
+
+            <p>
+                Prepare-se para responder às perguntas, testar seus
+                conhecimentos e descobrir o impacto das suas escolhas.
+            </p>
+
+            <button class="principal" onclick="iniciarJogo()">
+                Iniciar missão 🚀
+            </button>
+        </section>
+
+        <section id="jogo" class="escondido">
+            <p id="personagem" class="destaque"></p>
+
+            <div class="progresso">
+                <div id="barra"></div>
+            </div>
+
+            <p id="contador"></p>
+            <h1 id="pergunta"></h1>
+
+            <div id="alternativas"></div>
+
+            <p id="feedback"></p>
+
+            <button id="proximo" class="principal escondido"
+                onclick="proximaPergunta()">
+                Próxima pergunta →
+            </button>
+        </section>
+
+        <section id="resultado" class="escondido">
+            <h1>Missão concluída! 🎉</h1>
+            <p id="pontuacao"></p>
+            <p id="mensagemFinal"></p>
+
+            <button class="principal" onclick="jogarNovamente()">
+                Jogar novamente ↻
+            </button>
+        </section>
+
+        <div class="rodape">
+            Projeto educativo • HTML, CSS e JavaScript
+        </div>
+
+    </main>
+
+    <script>
+        const nomes = [
+            "Gabriel", "Ana", "Lucas", "Mariana",
+            "Pedro", "Julia", "Rafael", "Beatriz"
+        ];
+
+        const afirmacoes = [
+            "Pequenas atitudes podem transformar o futuro.",
+            "O conhecimento é uma ferramenta poderosa.",
+            "Cada escolha pode fazer a diferença.",
+            "O futuro depende das ações de hoje.",
+            "Aprender é o primeiro passo para mudar o mundo."
+        ];
+
+        const perguntas = [
+            {
+                pergunta: "Qual atitude ajuda a proteger o meio ambiente?",
+                alternativas: [
+                    "Desperdiçar água",
+                    "Reciclar materiais",
+                    "Jogar lixo nas ruas",
+                    "Desmatar florestas"
+                ],
+                correta: 1
+            },
+            {
+                pergunta: "Por que devemos utilizar a tecnologia com responsabilidade?",
+                alternativas: [
+                    "Para espalhar informações falsas",
+                    "Para prejudicar outras pessoas",
+                    "Para resolver problemas e ajudar a sociedade",
+                    "Para substituir todas as relações humanas"
+                ],
+                correta: 2
+            },
+            {
+                pergunta: "Qual é a melhor atitude diante de um problema?",
+                alternativas: [
+                    "Ignorar a situação",
+                    "Desistir imediatamente",
+                    "Culpar outras pessoas",
+                    "Analisar as opções e buscar soluções"
+                ],
+                correta: 3
+            },
+            {
+                pergunta: "Como podemos contribuir para um futuro melhor?",
+                alternativas: [
+                    "Agindo com responsabilidade e respeito",
+                    "Pensando apenas em nós mesmos",
+                    "Desperdiçando recursos",
+                    "Ignorando os problemas sociais"
+                ],
+                correta: 0
+            }
+        ];
+
+        let indice = 0;
+        let pontos = 0;
+        let respondeu = false;
+
+        // Escolhe um nome aleatório.
+        function nomeAleatorio() {
+            const indiceNome = Math.floor(Math.random() * nomes.length);
+            return nomes[indiceNome];
+        }
+
+        // Escolhe uma afirmação aleatória.
+        function afirmacaoAleatoria() {
+            const indiceAfirmação = Math.floor(
+                Math.random() * afirmacoes.length
+            );
+
+            return afirmacoes[indiceAfirmação];
+        }
+
+        // Substitui o nome no texto usando replace().
+        function personalizarTexto(nome) {
+            const texto = "Em 2049, NOME será responsável por grandes mudanças.";
+            return texto.replace("NOME", nome);
+        }
+
+        function iniciarJogo() {
+            indice = 0;
+            pontos = 0;
+
+            document.getElementById("inicio").classList.add("escondido");
+            document.getElementById("resultado").classList.add("escondido");
+            document.getElementById("jogo").classList.remove("escondido");
+
+            const nome = nomeAleatorio();
+
+            document.getElementById("personagem").textContent =
+                personalizarTexto(nome);
+
+            mostrarPergunta();
+        }
+
+        function mostrarPergunta() {
+            respondeu = false;
+
+            const atual = perguntas[indice];
+
+            document.getElementById("contador").textContent =
+                `Pergunta ${indice + 1} de ${perguntas.length}`;
+
+            document.getElementById("barra").style.width =
+                `${(indice / perguntas.length) * 100}%`;
+
+            document.getElementById("pergunta").textContent =
+                atual.pergunta;
+
+            document.getElementById("feedback").textContent =
+                afirmacaoAleatoria();
+
+            document.getElementById("proximo").classList.add("escondido");
+
+            const area = document.getElementById("alternativas");
+            area.innerHTML = "";
+
+            atual.alternativas.forEach((alternativa, i) => {
+                const botao = document.createElement("button");
+
+                botao.className = "alternativa";
+                botao.textContent = alternativa;
+                botao.onclick = () => verificarResposta(i);
+
+                area.appendChild(botao);
+            });
+        }
+
+        function verificarResposta(escolha) {
+            if (respondeu) return;
+
+            respondeu = true;
+
+            const atual = perguntas[indice];
+            const botoes = document.querySelectorAll(".alternativa");
+            const feedback = document.getElementById("feedback");
+
+            botoes.forEach(botao => botao.disabled = true);
+
+            if (escolha === atual.correta) {
+                pontos++;
+
+                feedback.textContent =
+                    "Correto! Você está ajudando a construir um futuro melhor. ✓";
+
+                feedback.style.color = "#168653";
+            } else {
+                feedback.textContent =
+                    "Não foi dessa vez! Continue aprendendo e tente novamente.";
+
+                feedback.style.color = "#c0392b";
+            }
+
+            botoes[atual.correta].style.background = "#b9edca";
+
+            document.getElementById("barra").style.width =
+                `${((indice + 1) / perguntas.length) * 100}%`;
+
+            const proximo = document.getElementById("proximo");
+
+            proximo.textContent =
+                indice === perguntas.length - 1
+                    ? "Ver resultado 🏆"
+                    : "Próxima pergunta →";
+
+            proximo.classList.remove("escondido");
+        }
+
+        function proximaPergunta() {
+            indice++;
+
+            if (indice < perguntas.length) {
+                mostrarPergunta();
+            } else {
+                mostrarResultado();
+            }
+        }
+
+        function mostrarResultado() {
+            document.getElementById("jogo").classList.add("escondido");
+            document.getElementById("resultado").classList.remove("escondido");
+
+            document.getElementById("pontuacao").textContent =
+                `Você acertou ${pontos} de ${perguntas.length} perguntas!`;
+
+            let mensagem;
+
+            if (pontos === perguntas.length) {
+                mensagem = "Incrível! Você dominou a missão!";
+            } else if (pontos >= 2) {
+                mensagem = "Muito bem! Continue aprendendo e evoluindo.";
+            } else {
+                mensagem = "Não desista! Cada tentativa é uma oportunidade de aprender.";
+            }
+
+            document.getElementById("mensagemFinal").textContent =
+                mensagem + " " + afirmacaoAleatoria();
+        }
+
+        function jogarNovamente() {
+            document.getElementById("resultado").classList.add("escondido");
+            document.getElementById("inicio").classList.remove("escondido");
+        }
+    </script>
+
+</body>
+</html>
